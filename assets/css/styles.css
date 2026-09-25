@@ -1,0 +1,609 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #000;
+  color: #fff;
+  font-family: "Courier New", monospace;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+#scene-container {
+  position: fixed;
+  inset: 0;
+}
+
+canvas {
+  display: block;
+  filter: contrast(115%) brightness(90%) saturate(78%);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ============================================================
+   MENÚS
+============================================================ */
+
+.menu-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, rgba(8, 10, 13, 0.68), rgba(0, 0, 0, 0.96));
+  backdrop-filter: blur(3px);
+}
+
+.menu-box {
+  position: relative;
+  width: min(90vw, 410px);
+  padding: 34px 34px 30px;
+  background: rgba(5, 6, 8, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.9);
+}
+
+.start-box {
+  width: min(90vw, 520px);
+  text-align: center;
+}
+
+.menu-glitch-title {
+  font-size: clamp(35px, 7vw, 64px);
+  font-weight: 700;
+  letter-spacing: 8px;
+  color: rgba(245, 245, 245, 0.95);
+  text-shadow: 3px 0 rgba(255, 0, 0, 0.32), -3px 0 rgba(0, 210, 255, 0.25);
+}
+
+.menu-subtitle {
+  margin-top: 7px;
+  font-size: 12px;
+  letter-spacing: 6px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.menu-divider {
+  width: 100%;
+  height: 1px;
+  margin: 24px 0;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.menu-description {
+  max-width: 380px;
+  margin: 0 auto 24px;
+  line-height: 1.8;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.loading-status {
+  margin-bottom: 20px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.menu-button {
+  width: 100%;
+  margin-top: 9px;
+  padding: 12px 16px;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  letter-spacing: 2px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.menu-button:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.menu-button.primary {
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.38);
+}
+
+.menu-button.danger:hover {
+  color: #ff8f8f;
+  border-color: rgba(255, 80, 80, 0.55);
+}
+
+.menu-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.start-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 18px;
+  margin-top: 25px;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.menu-warning {
+  margin-top: 25px;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.menu-small-label {
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.pause-title {
+  margin: 7px 0 0;
+  font-size: 34px;
+  letter-spacing: 5px;
+  font-weight: normal;
+}
+
+/* ============================================================
+   OPCIONES
+============================================================ */
+
+.option-row {
+  margin: 21px 0;
+}
+
+.option-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: #d1d1d1;
+}
+
+.toggle-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 28px 0;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.toggle-option input {
+  display: none;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 38px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.toggle-switch::before {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  left: 2px;
+  top: 2px;
+  background: rgba(255, 255, 255, 0.4);
+  transition: 0.2s;
+}
+
+.toggle-option input:checked + .toggle-switch::before {
+  transform: translateX(20px);
+  background: white;
+}
+
+/* ============================================================
+   GAME OVER
+============================================================ */
+
+.game-over-screen {
+  background: rgba(22, 0, 0, 0.92);
+}
+
+.game-over-label {
+  color: rgba(255, 70, 70, 0.6);
+  font-size: 10px;
+  letter-spacing: 5px;
+}
+
+.game-over-title {
+  margin: 8px 0;
+  font-size: 42px;
+  color: #c63232;
+  letter-spacing: 5px;
+}
+
+.game-over-text {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* ============================================================
+   HUD GENERAL
+============================================================ */
+
+.camcorder-hud,
+.lives-hud,
+.status-hud,
+.objective-panel,
+.breath-hud,
+.controls-hint,
+.crosshair {
+  text-shadow: 0 0 3px rgba(0, 0, 0, 1), 1px 1px 0 rgba(0, 0, 0, 0.85);
+}
+
+/* ============================================================
+   CROSSHAIR
+============================================================ */
+
+.crosshair {
+  position: fixed;
+  z-index: 20;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 15px;
+  pointer-events: none;
+}
+
+/* ============================================================
+   INTERACCIÓN
+============================================================ */
+
+.interaction-prompt {
+  position: fixed;
+  z-index: 30;
+  left: 50%;
+  top: 57%;
+  transform: translate(-50%, -50%);
+  display: none;
+  padding: 7px 13px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #ddd;
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+
+/* ============================================================
+   VHS
+============================================================ */
+
+.vhs-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 38%, rgba(0, 0, 0, 0.2) 60%, rgba(0, 0, 0, 0.9) 118%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03), rgba(0, 0, 0, 0.08));
+  opacity: 1;
+  animation: vhsFlicker 5s infinite steps(2);
+}
+
+.vhs-scanlines {
+  position: fixed;
+  inset: 0;
+  z-index: 11;
+  pointer-events: none;
+  opacity: 0.42;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.045) 0px,
+      rgba(255, 255, 255, 0.045) 1px,
+      rgba(0, 0, 0, 0.22) 2px,
+      rgba(0, 0, 0, 0.22) 4px
+    );
+  mix-blend-mode: overlay;
+}
+
+.vhs-noise {
+  position: fixed;
+  inset: -25%;
+  z-index: 12;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image:
+    repeating-radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.8) 0,
+      rgba(255, 255, 255, 0.18) 1px,
+      transparent 2px,
+      transparent 5px
+    );
+  background-size: 8px 8px;
+  animation: noiseMove 0.18s steps(2) infinite;
+}
+
+@keyframes noiseMove {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(2%, -1%); }
+  50% { transform: translate(-2%, 2%); }
+  75% { transform: translate(1%, 1%); }
+}
+
+@keyframes vhsFlicker {
+  0%, 100% { opacity: 1; }
+  8% { opacity: 0.97; }
+  9% { opacity: 1; }
+  18% { opacity: 0.95; }
+  19% { opacity: 1; }
+  54% { opacity: 0.98; }
+  55% { opacity: 1; }
+  82% { opacity: 0.96; }
+  83% { opacity: 1; }
+}
+
+/* ============================================================
+   DAÑO
+============================================================ */
+
+.damage-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle, transparent 25%, rgba(155, 0, 0, 0.8));
+  transition: opacity 0.25s;
+}
+
+.damage-flash.active {
+  opacity: 1;
+}
+
+/* ============================================================
+   HUD IZQUIERDO
+============================================================ */
+
+.camcorder-hud {
+  position: fixed;
+  top: 26px;
+  left: 30px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.record-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 7px;
+}
+
+.record-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #d93636;
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
+  animation: recordingBlink 1.1s infinite;
+}
+
+@keyframes recordingBlink {
+  0%, 45% { opacity: 1; }
+  46%, 100% { opacity: 0.2; }
+}
+
+.record-text {
+  font-size: 15px;
+}
+
+.tape-name {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.camera-mode {
+  font-size: 10px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   VIDAS
+============================================================ */
+
+.lives-hud {
+  position: fixed;
+  top: 88px;
+  left: 30px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.lives-label {
+  margin-bottom: 5px;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+#lives-container {
+  display: flex;
+  gap: 6px;
+}
+
+.life {
+  font-size: 13px;
+  color: rgba(210, 45, 45, 0.92);
+  text-shadow: 0 0 5px rgba(255, 0, 0, 0.35);
+}
+
+.life.lost {
+  color: rgba(255, 255, 255, 0.12);
+  text-shadow: none;
+}
+
+/* ============================================================
+   HUD DERECHO
+============================================================ */
+
+.status-hud {
+  position: fixed;
+  top: 27px;
+  right: 30px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.battery {
+  display: flex;
+  align-items: center;
+}
+
+.battery-body {
+  width: 34px;
+  height: 14px;
+  padding: 2px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+}
+
+.battery-level {
+  width: 78%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.battery-tip {
+  width: 3px;
+  height: 7px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.flashlight-status {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+.flashlight-status.off {
+  opacity: 0.25;
+}
+
+/* ============================================================
+   OBJETIVO
+============================================================ */
+
+.objective-panel {
+  position: fixed;
+  left: 28px;
+  bottom: 62px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.objective-label {
+  margin-bottom: 4px;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.objective-text {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ============================================================
+   STAMINA
+============================================================ */
+
+.breath-hud {
+  position: fixed;
+  left: 50%;
+  bottom: 35px;
+  z-index: 20;
+  width: 210px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.breath-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.breath-segments {
+  display: flex;
+  gap: 3px;
+}
+
+.breath-segment {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.breath-segment.active {
+  background: rgba(230, 230, 230, 0.8);
+}
+
+.breath-segment.warning {
+  background: rgba(220, 100, 80, 0.75);
+}
+
+.breath-segment.exhausted {
+  animation: exhaustedPulse 0.4s infinite alternate;
+  background: #9a2525;
+}
+
+@keyframes exhaustedPulse {
+  from { opacity: 0.25; }
+  to { opacity: 1; }
+}
+
+/* ============================================================
+   CONTROLES
+============================================================ */
+
+.controls-hint {
+  position: fixed;
+  right: 27px;
+  bottom: 26px;
+  z-index: 20;
+  display: flex;
+  gap: 13px;
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.28);
+  pointer-events: none;
+}

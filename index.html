@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    URBANCORE // TAPE_01.vhs
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="./assets/css/styles.css"
+  >
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+
+
+<body>
+
+  <!-- =====================================================
+       ESCENA THREE.JS
+  ====================================================== -->
+
+  <div id="scene-container"></div>
+
+
+  <!-- =====================================================
+       EFECTOS VHS
+  ====================================================== -->
+
+  <div class="vhs-overlay"></div>
+  <div class="vhs-scanlines"></div>
+  <div class="vhs-noise"></div>
+
+  <div
+    id="damage-flash"
+    class="damage-flash"
+  ></div>
+
+
+  <!-- =====================================================
+       PANTALLA DE INICIO
+  ====================================================== -->
+
+  <section
+    id="start-screen"
+    class="menu-screen"
+  >
+
+    <div class="menu-box start-box">
+
+      <div class="menu-glitch-title">
+        URBANCORE
+      </div>
+
+      <div class="menu-subtitle">
+        TAPE_01.VHS
+      </div>
+
+      <div class="menu-divider"></div>
+
+      <p class="menu-description">
+        Una ciudad vacía.
+        Una cinta encontrada.
+        Algo sigue caminando entre las calles.
+      </p>
+
+      <div
+        id="loading-status"
+        class="loading-status"
+      >
+        CARGANDO CIUDAD...
+      </div>
+
+      <button
+        id="start-button"
+        class="menu-button primary"
+        disabled
+      >
+        INICIAR CINTA
+      </button>
+
+      <div class="start-controls">
+
+        <span>
+          WASD — MOVERSE
+        </span>
+
+        <span>
+          SHIFT — CORRER
+        </span>
+
+        <span>
+          F — LINTERNA
+        </span>
+
+        <span>
+          E — INTERACTUAR
+        </span>
+
+        <span>
+          ESC — PAUSA
+        </span>
+
+      </div>
+
+      <div class="menu-warning">
+        HEADPHONES RECOMMENDED
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       MENÚ DE PAUSA
+  ====================================================== -->
+
+  <section
+    id="pause-screen"
+    class="menu-screen hidden"
+  >
+
+    <div class="menu-box">
+
+      <div class="menu-small-label">
+        TAPE PAUSED
+      </div>
+
+      <h2 class="pause-title">
+        PAUSA
+      </h2>
+
+      <div class="menu-divider"></div>
+
+      <button
+        id="resume-button"
+        class="menu-button primary"
+      >
+        CONTINUAR
+      </button>
+
+      <button
+        id="options-button"
+        class="menu-button"
+      >
+        OPCIONES
+      </button>
+
+      <button
+        id="restart-button"
+        class="menu-button"
+      >
+        REINICIAR
+      </button>
+
+      <button
+        id="main-menu-button"
+        class="menu-button danger"
+      >
+        SALIR AL MENÚ
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       OPCIONES
+  ====================================================== -->
+
+  <section
+    id="options-screen"
+    class="menu-screen hidden"
+  >
+
+    <div class="menu-box options-box">
+
+      <div class="menu-small-label">
+        CAMERA CONFIG
+      </div>
+
+      <h2 class="pause-title">
+        OPCIONES
+      </h2>
+
+      <div class="menu-divider"></div>
+
+
+      <!-- SENSIBILIDAD -->
+
+      <div class="option-row">
+
+        <div class="option-header">
+
+          <span>
+            SENSIBILIDAD
+          </span>
+
+          <span id="sensitivity-value">
+            1.00
+          </span>
+
+        </div>
+
+        <input
+          id="sensitivity-slider"
+          type="range"
+          min="0.35"
+          max="1.8"
+          step="0.05"
+          value="1"
+        >
+
+      </div>
+
+
+      <!-- BRILLO -->
+
+      <div class="option-row">
+
+        <div class="option-header">
+
+          <span>
+            BRILLO
+          </span>
+
+          <span id="brightness-value">
+            100%
+          </span>
+
+        </div>
+
+        <input
+          id="brightness-slider"
+          type="range"
+          min="0.65"
+          max="1.4"
+          step="0.05"
+          value="1"
+        >
+
+      </div>
+
+
+      <!-- VHS -->
+
+      <label class="toggle-option">
+
+        <span>
+          EFECTO VHS
+        </span>
+
+        <input
+          id="vhs-toggle"
+          type="checkbox"
+          checked
+        >
+
+        <span class="toggle-switch"></span>
+
+      </label>
+
+
+      <button
+        id="options-back-button"
+        class="menu-button primary"
+      >
+        VOLVER
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       GAME OVER
+  ====================================================== -->
+
+  <section
+    id="game-over-screen"
+    class="menu-screen game-over-screen hidden"
+  >
+
+    <div class="menu-box">
+
+      <div class="game-over-label">
+        SIGNAL LOST
+      </div>
+
+      <h2 class="game-over-title">
+        GAME OVER
+      </h2>
+
+      <p class="game-over-text">
+        La grabación terminó inesperadamente.
+      </p>
+
+      <button
+        id="game-over-restart"
+        class="menu-button primary"
+      >
+        REINICIAR CINTA
+      </button>
+
+      <button
+        id="game-over-menu"
+        class="menu-button"
+      >
+        MENÚ PRINCIPAL
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       HUD VHS
+  ====================================================== -->
+
+  <div class="camcorder-hud game-hud hidden">
+
+    <div class="record-line">
+
+      <span class="record-dot"></span>
+
+      <span class="record-text">
+        REC
+      </span>
+
+    </div>
+
+    <div class="tape-name">
+      TAPE 01
+    </div>
+
+    <div class="camera-mode">
+      SP
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       VIDAS
+  ====================================================== -->
+
+  <div
+    id="lives-hud"
+    class="lives-hud game-hud hidden"
+  >
+
+    <div class="lives-label">
+      SIGNAL
+    </div>
+
+    <div id="lives-container"></div>
+
+  </div>
+
+
+  <!-- =====================================================
+       BATERÍA
+  ====================================================== -->
+
+  <div class="status-hud game-hud hidden">
+
+    <div class="battery">
+
+      <div class="battery-body">
+
+        <div
+          id="battery-level"
+          class="battery-level"
+        ></div>
+
+      </div>
+
+      <div class="battery-tip"></div>
+
+    </div>
+
+    <div
+      id="flashlight-status"
+      class="flashlight-status"
+    >
+      LIGHT ●
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       CROSSHAIR
+  ====================================================== -->
+
+  <div class="crosshair game-hud hidden">
+    +
+  </div>
+
+
+  <!-- =====================================================
+       INTERACCIÓN
+  ====================================================== -->
+
+  <div
+    id="interaction-prompt"
+    class="interaction-prompt"
+  ></div>
+
+
+  <!-- =====================================================
+       OBJETIVO
+  ====================================================== -->
+
+  <div class="objective-panel game-hud hidden">
+
+    <div class="objective-label">
+      PLAYBACK LOG
+    </div>
+
+    <div class="objective-text">
+      Explora la ciudad.
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       STAMINA
+  ====================================================== -->
+
+  <div class="breath-hud game-hud hidden">
+
+    <div class="breath-header">
+
+      <span>
+        BREATH
+      </span>
+
+      <span
+        id="stamina-percent"
+        class="breath-percent"
+      >
+        100
+      </span>
+
+    </div>
+
+    <div
+      id="stamina-segments"
+      class="breath-segments"
+    ></div>
+
+  </div>
+
+
+  <!-- =====================================================
+       CONTROLES
+  ====================================================== -->
+
+  <div class="controls-hint game-hud hidden">
+
+    <span>
+      WASD MOVE
+    </span>
+
+    <span>
+      SHIFT RUN
+    </span>
+
+    <span>
+      F LIGHT
+    </span>
+
+    <span>
+      E USE
+    </span>
+
+    <span>
+      ESC PAUSE
+    </span>
+
+  </div>
+
+
+  <script
+    type="module"
+    src="./assets/js/main.js"
+  ></script>
+
+</body>
+
+</html>
