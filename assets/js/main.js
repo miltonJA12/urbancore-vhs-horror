@@ -1081,7 +1081,7 @@ function playCharacterAction(
 
   const previous =
     characterActions[
-      currentCharacterAction
+    currentCharacterAction
     ];
 
   const next =
@@ -1129,10 +1129,10 @@ function updateCharacterLocomotion(
     !moving
       ? 'idle'
       : (
-          running
-            ? 'run'
-            : 'walk'
-        );
+        running
+          ? 'run'
+          : 'walk'
+      );
 
   lastLocomotionState =
     state;
@@ -1820,7 +1820,7 @@ const camera =
   new THREE.PerspectiveCamera(
     72,
     window.innerWidth /
-      window.innerHeight,
+    window.innerHeight,
     0.1,
     1200
   );
@@ -2478,7 +2478,7 @@ function gamepadButtonPressed(
 ) {
   if (
     !gamepad.buttons[
-      buttonIndex
+    buttonIndex
     ]
   ) {
     return false;
@@ -2491,7 +2491,7 @@ function gamepadButtonPressed(
 
   const previous =
     previousGamepadButtons[
-      buttonIndex
+    buttonIndex
     ] ||
     false;
 
@@ -2523,7 +2523,7 @@ function updateGamepad(
   ) {
     gamepad =
       gamepads[
-        activeGamepadIndex
+      activeGamepadIndex
       ];
   }
 
@@ -2908,7 +2908,7 @@ function updateThirdPersonCamera(
   thirdPersonFocus.set(
     playerPosition.x,
     playerPosition.y +
-      THIRD_PERSON_FOCUS_HEIGHT,
+    THIRD_PERSON_FOCUS_HEIGHT,
     playerPosition.z
   );
 
@@ -3314,7 +3314,7 @@ function clearRapierBodyList(
         );
       }
       catch (
-        error
+      error
       ) {
       }
     }
@@ -3330,8 +3330,8 @@ function clearRapierBodyList(
         )
           ? item.mesh.material
           : [
-              item.mesh.material
-            ];
+            item.mesh.material
+          ];
 
       materials.forEach(
         material =>
@@ -3445,7 +3445,7 @@ function createRapierPlayerProxy() {
       );
     }
     catch (
-      error
+    error
     ) {
     }
   }
@@ -3862,8 +3862,8 @@ function spawnDynamicPhysicalObjects() {
 
     createPhysicalObject(
       types[
-        i %
-        types.length
+      i %
+      types.length
       ],
 
       point,
@@ -3931,7 +3931,7 @@ function createKnockdownStructure() {
 
       item.mesh.material.color.setHex(
         row %
-        2
+          2
           ? 0x5b5550
           : 0x44484c
       );
@@ -3991,7 +3991,7 @@ function spawnProjectile() {
         );
       }
       catch (
-        error
+      error
       ) {
       }
     }
@@ -4267,7 +4267,7 @@ function projectileImpactSweep() {
         );
       }
       catch (
-        error
+      error
       ) {
       }
 
@@ -5013,7 +5013,7 @@ function playScreamerSound() {
   }
 
   catch (
-    error
+  error
   ) {
   }
 }
@@ -5267,13 +5267,13 @@ function updateEntity(
 
       entityGlitchAmount =
         distance <
-        10
+          10
           ? (
-              1 -
-              distance /
-              10
-            ) *
-            0.45
+            1 -
+            distance /
+            10
+          ) *
+          0.45
           : 0.04;
 
       if (
@@ -5689,7 +5689,7 @@ function executeInteraction() {
       .interactType;
 
   switch (
-    type
+  type
   ) {
     case 'door':
 
@@ -5709,7 +5709,7 @@ function executeInteraction() {
             .userData
             .isOpen
             ? Math.PI /
-              2
+            2
             : 0
         );
 
@@ -5783,7 +5783,7 @@ function updateObjectiveHUD() {
 
   objectiveText.textContent =
     objectives[
-      questStage
+    questStage
     ] ||
     objectives[0];
 }
@@ -7380,6 +7380,9 @@ async function loadCharacter() {
       CHARACTER_HEIGHT
     );
 
+    // Girar el modelo 180° para que quede de espaldas a la cámara
+    characterModel.rotation.y = Math.PI;
+
     printCharacterSkeleton(
       characterModel
     );
@@ -7413,7 +7416,7 @@ async function loadCharacter() {
   }
 
   catch (
-    error
+  error
   ) {
     characterReady =
       false;
@@ -8038,7 +8041,7 @@ function updatePlayer(
 
   const acceleration =
     groundedGraceTimer >
-    0
+      0
       ? GROUND_ACCELERATION
       : AIR_ACCELERATION;
 
@@ -8333,7 +8336,7 @@ function updateLivesHUD() {
 
     life.className =
       i <
-      lives
+        lives
         ? 'life'
         : 'life lost';
 
@@ -9024,12 +9027,12 @@ function updateDebugPanel() {
 
   const enemyDistance =
     entityVisible &&
-    entity
+      entity
       ? horizontalEntityDistance()
       : Infinity;
 
   debugPanel.textContent =
-`FPS       ${currentFPS}
+    `FPS       ${currentFPS}
 LIVES     ${lives}
 STAMINA   ${Math.floor(stamina)}
 TAPES     ${tapesCollected}/${TOTAL_TAPES}
